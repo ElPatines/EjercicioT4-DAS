@@ -7,36 +7,38 @@ consulted: {list everyone whose opinions are sought (typically subject-matter ex
 informed: {list everyone who is kept up-to-date on progress; and with whom there is a one-way communication}
 ---
 
-# {short title, representative of solved problem and found solution}
+#  ADR 0001: Estilo arquitectónico para la lógica de negocio
 
 ## Context and Problem Statement
 
-{Describe the context and problem statement, e.g., in free form using two to three sentences or in the form of an illustrative story. You may want to articulate the problem in form of a question and add links to collaboration boards or issue management systems.}
+Debemos migrar un monolito de tres capas a una solución escalable y mantenible. Las capas de presentación, lógica de negocio y acceso a datos están fuertemente acopladas, lo que dificulta el desarrollo, las pruebas y el escalado independiente. Necesitamos aislar la lógica de dominio de la UI, el transporte y la persistencia.  
+
 
 <!-- This is an optional element. Feel free to remove. -->
 ## Decision Drivers
 
-* {decision driver 1, e.g., a force, facing concern, …}
-* {decision driver 2, e.g., a force, facing concern, …}
-* … <!-- numbers of drivers can vary -->
+Adoptar microservicios hexagonales  
+
 
 ## Considered Options
+- Monolito de tres capas  cambio mínimo, mantiene la pila actual.  
+- Microservicios en capas  rompe en servicios separados pero conserva la estructura por capas.  
+- Microservicios hexagonales – cada servicio encapsula dominio, puertos y adaptadores para UI, persistencia y mensajería.  
 
-* {title of option 1}
-* {title of option 2}
-* {title of option 3}
-* … <!-- numbers of options can vary -->
+
 
 ## Decision Outcome
 
-Chosen option: "{title of option 1}", because {justification. e.g., only option, which meets k.o. criterion decision driver | which resolves force {force} | … | comes out best (see below)}.
+Chosen option:: Microservicios hexagonales porque aseguran separación estricta entre el dominio y los mecanismos externos, mejorando la testabilidad y la independencia de despliegue.  
 
 <!-- This is an optional element. Feel free to remove. -->
 ### Consequences
 
-* Good, because {positive consequence, e.g., improvement of one or more desired qualities, …}
-* Bad, because {negative consequence, e.g., compromising one or more desired qualities, …}
-* … <!-- numbers of consequences can vary -->
+- Límites claros por capacidad de negocio, haciendo explícitas las reglas de dominio.  
+- Facilita el cambio de adaptadores (por ejemplo, pasar de Postgres a otro) sin tocar la lógica central.  
+- Aumenta la complejidad: cada servicio requiere su propio montaje de puertos y adaptadores.  
+- Requiere inversión en un framework o plantillas para estandarizar los puertos y adaptadores. 
+<!-- numbers of consequences can vary -->
 
 <!-- This is an optional element. Feel free to remove. -->
 ### Confirmation
